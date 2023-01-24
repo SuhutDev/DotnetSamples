@@ -1,0 +1,9 @@
+docker run -e "ACCEPT_EULA=Y" -e "SA_PASSWORD=Pass@Word1" -p 1433:1433 -d mcr.microsoft.com/mssql/server:2019-GA-ubuntu-16.04
+
+
+
+
+dotnet ef database drop -f
+dotnet ef migrations remove
+dotnet ef migrations add "MyMigration" --output-dir Persistence\Migrations
+dotnet ef database update
