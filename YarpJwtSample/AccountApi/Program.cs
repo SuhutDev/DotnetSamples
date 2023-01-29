@@ -4,6 +4,8 @@ var app = builder.Build();
 
 app.MapGet("/", () =>
 {
+    // var userId = HttpContext.Items["userId"];
+    // var userRole = HttpContext.Items["userRole"];
     return "AccountApi";
 });
 

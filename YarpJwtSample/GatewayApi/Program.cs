@@ -15,21 +15,66 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddSingleton<TokenService>();
 
 builder.Services.AddAuthorization(options =>
+    {
+       // options.AddPolicy("myPolicy", policy =>
+        //    policy.RequireAuthenticatedUser());
+    });
+
+/*
+builder.Services.AddAuthorization(options =>
             {
                 options.AddPolicy("myPolicy", policy =>
                                 {
-                                    policy.AddAuthenticationSchemes("MyJwtBearer")
+                                    policy
+                                        .AddAuthenticationSchemes(JwtBearerDefaults.AuthenticationScheme)
+                                            .RequireAssertion(context => context.User.HasClaim(c =>
+                                                c.Subject?.Name == "Bob"   ))
                                         .RequireAuthenticatedUser();
                                 });
             });
+            */
 
 builder.Services.AddAuthentication(options =>
 {
     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
     options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-})
+}).AddCookie()
 .AddJwtBearer(options =>
 {
+    
+    options.Events = new JwtBearerEvents
+    {
+        OnAuthenticationFailed = context =>
+        {
+            if (context.Exception.GetType() == typeof(SecurityTokenExpiredException))
+            {
+                context.Response.Headers.Add("Token-Expired", "true");
+            }
+            return Task.CompletedTask;
+        },
+        OnTokenValidated = context =>
+        {
+            var identity = context.Principal.Identity;
+            var userId = identity.Name;
+
+            context.HttpContext.Request.Headers.Add("UserId", userId);
+            
+            /*
+            var user = context.Principal;
+            // add custom claims to user
+            user.Identities.First().AddClaim(new Claim("custom_claim", "custom_value"));
+            */
+            
+            /*
+                 var claimsIdentity = authentication.Principal.Identity as ClaimsIdentity;
+            context.Items["userId"] = claimsIdentity.FindFirst("sub").Value;
+            context.Items["userRole"] = claimsIdentity.FindFirst("role").Value;
+        
+             */
+            return Task.CompletedTask;
+        }
+    }; 
+    
     options.IncludeErrorDetails = true;
     options.TokenValidationParameters = new TokenValidationParameters
     {
@@ -38,7 +83,7 @@ builder.Services.AddAuthentication(options =>
         ValidateLifetime = true,
         ValidateIssuerSigningKey = true,
         ValidIssuer = "practical aspnetcore",
-        ValidAudience = "https://localhost:5001/",
+        ValidAudience = "https://localhost:5068/",
         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("this is custom key for practical aspnetcore sample"))
     };
 });
@@ -48,6 +93,7 @@ builder.Services
     .LoadFromConfig(builder.Configuration.GetSection("yarp"))
                 .AddTransforms(transformBuilderContext =>  // Add transforms inline
                 {
+                    /*
                     // For each route+cluster pair decide if we want to add transforms, and if so, which?
                     // This logic is re-run each time a route is rebuilt.
 
@@ -56,6 +102,7 @@ builder.Services
                     {
                         transformBuilderContext.AddRequestTransform(async transformContext =>
                         {
+                             
                             // AuthN and AuthZ will have already been completed after request routing.
                             var ticket = await transformContext.HttpContext.AuthenticateAsync(CookieAuthenticationDefaults.AuthenticationScheme);
                             var tokenService = transformContext.HttpContext.RequestServices.GetRequiredService<TokenService>();
@@ -68,10 +115,11 @@ builder.Services
                                 response.StatusCode = 401;
                                 return;
                             }
-
+                             
                             transformContext.ProxyRequest.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
                         });
                     }
+                    */
                 });
 ;
 
@@ -83,6 +131,11 @@ app.MapGet("/", () =>
 {
     return "GatewayApi";
 });
+
+app.MapGet("/test123",  () =>
+{
+    return "GatewayApi";
+}).RequireAuthorization();
 
 app.MapPost("/login", () =>
 {
