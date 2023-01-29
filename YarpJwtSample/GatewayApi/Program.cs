@@ -51,7 +51,7 @@ builder.Services.AddAuthentication(options =>
             return Task.CompletedTask;
         },
         OnTokenValidated = context =>
-        { 
+        {
             //option 1 : as header; effect on this project and destintion
             /*
             var identity = context.Principal.Identity;
@@ -99,9 +99,9 @@ builder.Services
                 .AddTransforms(transformBuilderContext =>  // Add transforms inline
                 {
                     transformBuilderContext.AddRequestTransform(async transformContext =>
-                    { 
-                         //no need
-                    }); 
+                    {
+                        //no need
+                    });
                 });
 
 
