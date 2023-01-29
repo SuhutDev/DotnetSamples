@@ -11,28 +11,26 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 
 var builder = WebApplication.CreateBuilder(args);
 
-
-builder.Services.AddSingleton<TokenService>();
-
+/*
 builder.Services.AddAuthorization(options =>
     {
        // options.AddPolicy("myPolicy", policy =>
         //    policy.RequireAuthenticatedUser());
     });
+*/
 
-/*
 builder.Services.AddAuthorization(options =>
-            {
-                options.AddPolicy("myPolicy", policy =>
-                                {
-                                    policy
-                                        .AddAuthenticationSchemes(JwtBearerDefaults.AuthenticationScheme)
-                                            .RequireAssertion(context => context.User.HasClaim(c =>
-                                                c.Subject?.Name == "Bob"   ))
-                                        .RequireAuthenticatedUser();
-                                });
-            });
-            */
+{
+    options.AddPolicy("myPolicy", policy =>
+                    {
+                        policy
+                            .AddAuthenticationSchemes(JwtBearerDefaults.AuthenticationScheme)
+                                .RequireAssertion(context => context.User.HasClaim(c =>
+                                    c.Subject?.Name == "Admin"))
+                            .RequireAuthenticatedUser();
+                    });
+});
+
 
 builder.Services.AddAuthentication(options =>
 {
@@ -41,7 +39,7 @@ builder.Services.AddAuthentication(options =>
 }).AddCookie()
 .AddJwtBearer(options =>
 {
-    
+
     options.Events = new JwtBearerEvents
     {
         OnAuthenticationFailed = context =>
@@ -53,28 +51,35 @@ builder.Services.AddAuthentication(options =>
             return Task.CompletedTask;
         },
         OnTokenValidated = context =>
-        {
+        { 
+            //option 1 : as header; effect on this project and destintion
+            /*
             var identity = context.Principal.Identity;
             var userId = identity.Name;
-
             context.HttpContext.Request.Headers.Add("UserId", userId);
-            
+            */
+            context.HttpContext.Request.Headers.Add("Header_Name", "Admin");
+
+            //option 2 : as claim; effect only on this project
             /*
             var user = context.Principal;
             // add custom claims to user
             user.Identities.First().AddClaim(new Claim("custom_claim", "custom_value"));
             */
-            
+            //context.Principal?.Identities.First().AddClaim(new Claim("CustomClaim_Name", "Admin"));
+
+            //option 3 : as contex item; effect only on this project
             /*
-                 var claimsIdentity = authentication.Principal.Identity as ClaimsIdentity;
+            var claimsIdentity = authentication.Principal.Identity as ClaimsIdentity;
             context.Items["userId"] = claimsIdentity.FindFirst("sub").Value;
             context.Items["userRole"] = claimsIdentity.FindFirst("role").Value;
-        
              */
+            //context.HttpContext.Items["HttpContext_Name"] = "Admin";
+
             return Task.CompletedTask;
         }
-    }; 
-    
+    };
+
     options.IncludeErrorDetails = true;
     options.TokenValidationParameters = new TokenValidationParameters
     {
@@ -93,35 +98,12 @@ builder.Services
     .LoadFromConfig(builder.Configuration.GetSection("yarp"))
                 .AddTransforms(transformBuilderContext =>  // Add transforms inline
                 {
-                    /*
-                    // For each route+cluster pair decide if we want to add transforms, and if so, which?
-                    // This logic is re-run each time a route is rebuilt.
-
-                    // Only do this for routes that require auth.
-                    if (string.Equals("myPolicy", transformBuilderContext.Route.AuthorizationPolicy))
-                    {
-                        transformBuilderContext.AddRequestTransform(async transformContext =>
-                        {
-                             
-                            // AuthN and AuthZ will have already been completed after request routing.
-                            var ticket = await transformContext.HttpContext.AuthenticateAsync(CookieAuthenticationDefaults.AuthenticationScheme);
-                            var tokenService = transformContext.HttpContext.RequestServices.GetRequiredService<TokenService>();
-                            var token = await tokenService.GetAuthTokenAsync(ticket.Principal);
-
-                            // Reject invalid requests
-                            if (string.IsNullOrEmpty(token))
-                            {
-                                var response = transformContext.HttpContext.Response;
-                                response.StatusCode = 401;
-                                return;
-                            }
-                             
-                            transformContext.ProxyRequest.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
-                        });
-                    }
-                    */
+                    transformBuilderContext.AddRequestTransform(async transformContext =>
+                    { 
+                         //no need
+                    }); 
                 });
-;
+
 
 var app = builder.Build();
 app.UseAuthentication();
@@ -132,9 +114,9 @@ app.MapGet("/", () =>
     return "GatewayApi";
 });
 
-app.MapGet("/test123",  () =>
+app.MapGet("/Secure", () =>
 {
-    return "GatewayApi";
+    return "GatewayApi-Secure";
 }).RequireAuthorization();
 
 app.MapPost("/login", () =>
@@ -173,26 +155,13 @@ string GenerateJSONWebToken()
         audience: "https://localhost:5068/",
         claims: new List<Claim>
         {
-            new Claim(ClaimTypes.Name, "Bob"),
+            new Claim(ClaimTypes.Name, "Admin"),
         },
         notBefore: null,
-        expires: DateTime.Now.AddMinutes(120),
+        expires: DateTime.Now.AddYears(1),
         signingCredentials: credentials);
 
     return new JwtSecurityTokenHandler().WriteToken(token);
 }
 
 
-
-internal class TokenService
-{
-    internal Task<string> GetAuthTokenAsync(ClaimsPrincipal user)
-    {
-        // we only have tokens for bob
-        if (string.Equals("Bob", user.Identity.Name))
-        {
-            return Task.FromResult(Guid.NewGuid().ToString());
-        }
-        return Task.FromResult<string>(null);
-    }
-}
