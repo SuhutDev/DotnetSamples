@@ -113,23 +113,7 @@ app.MapGet("/TestSecure", () =>
 
 app.MapPost("/Auth/login", () =>
 {
-    var accessToken = GenerateJSONWebToken();
-    var refreshToken = "refreshToken01";
-
-    var result = new
-    {
-        UserAccess = new
-        {
-            //xxx
-        },
-        Token = new
-        {
-            accessToken = accessToken,
-            refreshToken = refreshToken
-        },
-
-    };
-
+    var result = Login();
     return Results.Ok(result);
 });
 
@@ -147,6 +131,27 @@ app.MapGet("/Token/Refresh", () =>
 app.MapReverseProxy();
 
 app.Run();
+
+dynamic Login()
+{
+    var accessToken = GenerateJSONWebToken();
+    var refreshToken = "refreshToken01";
+
+    var result = new
+    {
+        UserAccess = new
+        {
+            //xxx
+        },
+        Token = new
+        {
+            accessToken = accessToken,
+            refreshToken = refreshToken
+        },
+
+    };
+    return result;
+}
 
 //https://github.com/dodyg/practical-aspnetcore/blob/net6.0/projects/.net7/authentication-1/Program.cs
 string GenerateJSONWebToken()
