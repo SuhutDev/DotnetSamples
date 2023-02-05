@@ -2,21 +2,37 @@
 GET http://localhost:5068
 
 ###
-POST  http://localhost:5068/login
+POST  http://localhost:5068/Auth/Login
 
 ###
 
-GET http://localhost:5068/Secure
+@Token =eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1laWRlbnRpZmllciI6IjEiLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiQWRtaW4iLCJleHAiOjE3MDcxMzg5MDIsImlzcyI6InByYWN0aWNhbCBhc3BuZXRjb3JlIiwiYXVkIjoiaHR0cHM6Ly9sb2NhbGhvc3Q6NTA2OC8ifQ.elpwYlG7lJ_KxMk4ogtfzOfmHgD50OXYqkKp_5Q2z8g
+
+###
+GET http://localhost:5068/TestSecure
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiQWRtaW4iLCJleHAiOjE3MDY1MjEwMTcsImlzcyI6InByYWN0aWNhbCBhc3BuZXRjb3JlIiwiYXVkIjoiaHR0cHM6Ly9sb2NhbGhvc3Q6NTA2OC8ifQ.p12LPPC-Aym3_baGJfGLlcMT5_11s6KFZgk0xAvVgcE
+Authorization: Bearer {{Token}}
 
 ###
 
 GET http://localhost:5068/account-api/
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiQWRtaW4iLCJleHAiOjE3MDY1MjEwMTcsImlzcyI6InByYWN0aWNhbCBhc3BuZXRjb3JlIiwiYXVkIjoiaHR0cHM6Ly9sb2NhbGhvc3Q6NTA2OC8ifQ.p12LPPC-Aym3_baGJfGLlcMT5_11s6KFZgk0xAvVgcE
+Authorization: Bearer {{Token}}
 
 ###
 
+GET http://localhost:5068/account-api/GetProfile
+Content-Type: application/json
+Authorization: Bearer {{Token}}
+###
+
 GET http://localhost:5068/app-api/
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiQWRtaW4iLCJleHAiOjE3MDY1MjEwMTcsImlzcyI6InByYWN0aWNhbCBhc3BuZXRjb3JlIiwiYXVkIjoiaHR0cHM6Ly9sb2NhbGhvc3Q6NTA2OC8ifQ.p12LPPC-Aym3_baGJfGLlcMT5_11s6KFZgk0xAvVgcE
+Authorization: Bearer {{Token}}
+
+###
+
+GET http://localhost:5068/app-api/GetCustomer
+Content-Type: application/json
+Authorization: Bearer {{Token}}
+###
+

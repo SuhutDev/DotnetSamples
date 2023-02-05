@@ -4,14 +4,20 @@ var builder = WebApplication.CreateBuilder(args);
 
 var app = builder.Build();
 
-app.MapGet("/", (HttpContext context) =>
+app.MapGet("/", () =>
 {
-    var header_Name = string.Empty;
-    if (context.Request.Headers.TryGetValue("Header_Name", out StringValues stringValues))
+    return $"AppApi";
+
+});
+
+app.MapGet("/GetCustomer", (HttpContext context) =>
+{
+    string header_UserId = String.Empty;
+    if (context.Request.Headers.TryGetValue("Header_UserId", out StringValues values))
     {
-        header_Name = stringValues.ToString();
+        header_UserId = values!;
     }
-    return $"AppApi - {header_Name}";
+    return $"AppApi - UserId:{header_UserId}";
 
 });
 

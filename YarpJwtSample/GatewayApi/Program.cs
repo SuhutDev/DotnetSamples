@@ -5,19 +5,7 @@ using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Yarp.ReverseProxy.Transforms;
 
-using System.Net.Http.Headers;
-using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authentication.Cookies;
-
 var builder = WebApplication.CreateBuilder(args);
-
-/*
-builder.Services.AddAuthorization(options =>
-    {
-       // options.AddPolicy("myPolicy", policy =>
-        //    policy.RequireAuthenticatedUser());
-    });
-*/
 
 builder.Services.AddAuthorization(options =>
 {
@@ -46,35 +34,24 @@ builder.Services.AddAuthentication(options =>
         {
             if (context.Exception.GetType() == typeof(SecurityTokenExpiredException))
             {
+
                 context.Response.Headers.Add("Token-Expired", "true");
             }
             return Task.CompletedTask;
         },
         OnTokenValidated = context =>
         {
-            //option 1 : as header; effect on this project and destintion
-            /*
-            var identity = context.Principal.Identity;
-            var userId = identity.Name;
-            context.HttpContext.Request.Headers.Add("UserId", userId);
-            */
-            context.HttpContext.Request.Headers.Add("Header_Name", "Admin");
+            //can't read claim here
+            //only for hardcode value 
 
-            //option 2 : as claim; effect only on this project
-            /*
-            var user = context.Principal;
-            // add custom claims to user
-            user.Identities.First().AddClaim(new Claim("custom_claim", "custom_value"));
-            */
-            //context.Principal?.Identities.First().AddClaim(new Claim("CustomClaim_Name", "Admin"));
+            //option 1 : as header; effect on this project and destintion 
+            // context!.HttpContext.Request.Headers.Add("Header_UserId", userId);
+
+            //option 2 : as claim; effect only on this project 
+            //context.Principal?.Identities.First().AddClaim(new Claim("CustomClaim_UserId", 1));
 
             //option 3 : as contex item; effect only on this project
-            /*
-            var claimsIdentity = authentication.Principal.Identity as ClaimsIdentity;
-            context.Items["userId"] = claimsIdentity.FindFirst("sub").Value;
-            context.Items["userRole"] = claimsIdentity.FindFirst("role").Value;
-             */
-            //context.HttpContext.Items["HttpContext_Name"] = "Admin";
+            //context.HttpContext.Items["HttpContext_UserId"] = 1; 
 
             return Task.CompletedTask;
         }
@@ -98,10 +75,25 @@ builder.Services
     .LoadFromConfig(builder.Configuration.GetSection("yarp"))
                 .AddTransforms(transformBuilderContext =>  // Add transforms inline
                 {
-                    transformBuilderContext.AddRequestTransform(async transformContext =>
+                    transformBuilderContext.AddRequestTransform(transformContext =>
                     {
                         //no need
+                        var identity = transformContext?.HttpContext?.User.Identity as ClaimsIdentity;
+                        if (identity != null)
+                        {
+                            IList<Claim> claims = identity.Claims.ToList();
+                            if (claims.Count > 0)
+                            {
+                                var userId = claims[0].Value;
+                                var name = claims[0].Value;
+                                transformContext!.ProxyRequest.Headers.Add("Header_UserId", userId);
+                                System.Console.WriteLine($"test:{userId}");
+                            }
+                        }
+
+                        return ValueTask.CompletedTask;
                     });
+
                 });
 
 
@@ -114,12 +106,12 @@ app.MapGet("/", () =>
     return "GatewayApi";
 });
 
-app.MapGet("/Secure", () =>
+app.MapGet("/TestSecure", () =>
 {
-    return "GatewayApi-Secure";
+    return "GatewayApi-TestSecure";
 }).RequireAuthorization();
 
-app.MapPost("/login", () =>
+app.MapPost("/Auth/login", () =>
 {
     var accessToken = GenerateJSONWebToken();
     var refreshToken = "refreshToken01";
@@ -141,6 +133,17 @@ app.MapPost("/login", () =>
     return Results.Ok(result);
 });
 
+app.MapGet("/Token/Revoke", () =>
+{
+    return "GatewayApi-Token/Revoke";
+}).RequireAuthorization();
+
+app.MapGet("/Token/Refresh", () =>
+{
+    return "GatewayApi-Token/Refresh";
+});
+
+
 app.MapReverseProxy();
 
 app.Run();
@@ -155,6 +158,7 @@ string GenerateJSONWebToken()
         audience: "https://localhost:5068/",
         claims: new List<Claim>
         {
+            new Claim(ClaimTypes.NameIdentifier, "1"),
             new Claim(ClaimTypes.Name, "Admin"),
         },
         notBefore: null,
