@@ -73,28 +73,28 @@ builder.Services.AddAuthentication(options =>
 builder.Services
     .AddReverseProxy()
     .LoadFromConfig(builder.Configuration.GetSection("yarp"))
-                .AddTransforms(transformBuilderContext =>  // Add transforms inline
+    .AddTransforms(transformBuilderContext =>  // Add transforms inline
+    {
+        transformBuilderContext.AddRequestTransform(transformContext =>
+        {
+            //no need
+            var identity = transformContext?.HttpContext?.User.Identity as ClaimsIdentity;
+            if (identity != null)
+            {
+                IList<Claim> claims = identity.Claims.ToList();
+                if (claims.Count > 0)
                 {
-                    transformBuilderContext.AddRequestTransform(transformContext =>
-                    {
-                        //no need
-                        var identity = transformContext?.HttpContext?.User.Identity as ClaimsIdentity;
-                        if (identity != null)
-                        {
-                            IList<Claim> claims = identity.Claims.ToList();
-                            if (claims.Count > 0)
-                            {
-                                var userId = claims[0].Value;
-                                var name = claims[0].Value;
-                                transformContext!.ProxyRequest.Headers.Add("Header_UserId", userId);
-                                System.Console.WriteLine($"test:{userId}");
-                            }
-                        }
+                    var userId = claims[0].Value;
+                    var name = claims[0].Value;
+                    transformContext!.ProxyRequest.Headers.Add("Header_UserId", userId);
+                    System.Console.WriteLine($"test:{userId}");
+                }
+            }
 
-                        return ValueTask.CompletedTask;
-                    });
+            return ValueTask.CompletedTask;
+        });
 
-                });
+    });
 
 
 var app = builder.Build();
