@@ -9,7 +9,7 @@ namespace EfPkNonClusterSample;
 public class MyContext : DbContext
 {
 
-    public DbSet<Customer> Customers { get; set; }
+    public DbSet<Customer>? Customers { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
