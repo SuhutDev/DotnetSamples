@@ -1,0 +1,12 @@
+POST http://localhost:5172/EfCustomer/Add HTTP/1.1
+content-type: application/json
+
+{
+    "CustomerName": "Customer 01",
+    "JoinDate": "2023-04-01T08:07:00+07:00"
+}
+
+###
+
+GET  http://localhost:5172/EfCustomer/List HTTP/1.1
+content-type: application/json
