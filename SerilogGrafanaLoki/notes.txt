@@ -3,7 +3,7 @@
 
 ## COMPLETE DOCKER COMPOSE
 
-##grafana, grafana-promtail, grafana-loki
+##grafana, grafana-loki
 https://grafana.com/docs/loki/latest/installation/docker/
 
 
@@ -12,12 +12,7 @@ https://grafana.com/docs/loki/latest/installation/docker/
 ##grafana 
 https://grafana.com/docs/grafana/latest/setup-grafana/installation/windows/
 .\grafana-server.exe  
-
  
-##grafana-promtail 
-https://grafana.com/docs/loki/latest/installation/local/
-.\promtail-windows-amd64.exe --config.file=promtail-local-config.yaml  
-
  
 ##grafana-loki 
 https://github.com/grafana/loki/releases
@@ -33,11 +28,7 @@ https://github.com/grafana/loki/releases
 http://localhost:3000 
 user : admin
 passw : admin
-
  
-##grafana-promtail  
-http://localhost:9080/
-
  
 ##grafana-loki  
 http://localhost:3100
