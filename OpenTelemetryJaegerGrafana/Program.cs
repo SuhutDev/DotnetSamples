@@ -1,3 +1,6 @@
+using Microsoft.Extensions.Hosting;
+using OpenTelemetry;
+using System.Diagnostics;
 using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
 
@@ -16,7 +19,7 @@ builder.Services.AddOpenTelemetry()
             //resourceBuilder.AddTelemetrySdk();
         })
         .AddAspNetCoreInstrumentation()
-        .AddHttpClientInstrumentation()
+    .AddHttpClientInstrumentation()
         .AddJaegerExporter()
 
     );
