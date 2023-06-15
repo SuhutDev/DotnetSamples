@@ -1,8 +1,7 @@
 using System.Reflection;
 using OpenTelemetry.Metrics;
 using OpenTelemetry.Resources;
-
-
+using OpenTelemetry.Trace;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -12,26 +11,48 @@ var assemblyVersion = Assembly.GetExecutingAssembly()
 
 //ON PROGRESS
 builder.Services.AddOpenTelemetry()
+  .WithTracing(options => options
+        .ConfigureResource(resourceBuilder =>
+        {
+            resourceBuilder.AddService(
+                builder.Environment.ApplicationName,
+                builder.Environment.EnvironmentName,
+                "1.0",
+                false,
+                Environment.MachineName);
+        })
+        .AddAspNetCoreInstrumentation(o =>
+        {
+            o.Filter = ctx => ctx.Request.Path != "/metrics";
+        })
+        .AddHttpClientInstrumentation()
+        .AddOtlpExporter(options =>
+        {
+            options.Endpoint = new Uri("http://localhost:4317");
+        })
+    )
   .WithMetrics(options => options
         .ConfigureResource(resourceBuilder =>
         {
             resourceBuilder.AddService(
-                "ServiceB",
-                serviceVersion: assemblyVersion,
-                serviceInstanceId: Environment.MachineName
-                );
+                builder.Environment.ApplicationName,
+                builder.Environment.EnvironmentName,
+                "1.0",
+                false,
+                Environment.MachineName);
+        })
+        .AddAspNetCoreInstrumentation(o =>
+        {
+            o.Filter = (_, ctx) => ctx.Request.Path != "/metrics";
         })
         .AddHttpClientInstrumentation()
-        .AddAspNetCoreInstrumentation() 
-        .AddEventCountersInstrumentation(options =>
-        {
-            options.RefreshIntervalSecs = 1;
-            //options.AddEventSources("MyEventSource");
-        })
+        .AddRuntimeInstrumentation()
+        .AddProcessInstrumentation()
         .AddOtlpExporter(opts =>
         {
             opts.Endpoint = new Uri("http://localhost:4317");
         })
+        //.AddPrometheusExporter()
 
     )
   ;
@@ -42,6 +63,8 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
+
+//app.UseOpenTelemetryPrometheusScrapingEndpoint();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
