@@ -1,7 +1,7 @@
-﻿using DddEf.Domain.Common.Models;
-using DddEf.Domain.Product.ValueObjects;
+﻿using DddEf.Domain.Aggregates.Product.ValueObjects;
+using DddEf.Domain.Common.Models;
 
-namespace DddEf.Domain.Product.Entities;
+namespace DddEf.Domain.Aggregates.Product;
 
 public sealed class Product : AggregateRoot<ProductId>
 {

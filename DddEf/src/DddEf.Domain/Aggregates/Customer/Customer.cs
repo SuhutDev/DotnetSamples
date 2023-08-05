@@ -1,12 +1,12 @@
-﻿using DddEf.Domain.Common.Models;
-using DddEf.Domain.Customer.ValueObjects;
+﻿using DddEf.Domain.Aggregates.Customer.ValueObjects;
+using DddEf.Domain.Common.Models;
 
-namespace DddEf.Domain.Customer;
+namespace DddEf.Domain.Aggregates.Customer;
 
 public sealed class Customer : AggregateRoot<CustomerId>
 {
 #pragma warning disable CS8618
-    private Customer() 
+    private Customer()
     {
 
     }

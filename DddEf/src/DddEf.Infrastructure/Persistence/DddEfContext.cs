@@ -1,7 +1,7 @@
-﻿using DddEf.Domain.Customer;
-using DddEf.Domain.Product.Entities;
-using DddEf.Domain.SalesOrder;
-using DddEf.Domain.SalesOrder.Entities;
+﻿using DddEf.Domain.Aggregates.Customer;
+using DddEf.Domain.Aggregates.Product;
+using DddEf.Domain.Aggregates.SalesOrder;
+using DddEf.Domain.Aggregates.SalesOrder.Entities;
 using Microsoft.EntityFrameworkCore;
 using System.Reflection;
 

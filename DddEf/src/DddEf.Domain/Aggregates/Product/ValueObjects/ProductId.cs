@@ -1,23 +1,24 @@
 ﻿using DddEf.Domain.Common.Models;
+using DddEf.Domain.Customer.ValueObjects;
 
-namespace DddEf.Domain.Customer.ValueObjects;
+namespace DddEf.Domain.Aggregates.Product.ValueObjects;
 
-public sealed class CustomerId : ValueObject
+public sealed class ProductId : ValueObject
 {
     public Guid Value { get; }
 #pragma warning disable CS8618
-    private CustomerId()
+    private ProductId()
     {
     }
 #pragma warning disable CS8618
 
-    private CustomerId(Guid value) => Value = value;
+    private ProductId(Guid value) => Value = value;
 
-    public static CustomerId CreateUnique()
+    public static ProductId CreateUnique()
     {
         return new(Guid.NewGuid());
     }
-    public static CustomerId Create(Guid value)
+    public static ProductId Create(Guid value)
     {
         return new(value);
     }
@@ -26,5 +27,4 @@ public sealed class CustomerId : ValueObject
     {
         yield return Value;
     }
-
 }

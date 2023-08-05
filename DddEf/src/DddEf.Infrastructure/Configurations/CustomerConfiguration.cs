@@ -1,5 +1,5 @@
-﻿using DddEf.Domain.Customer;
-using DddEf.Domain.Customer.ValueObjects;
+﻿using DddEf.Domain.Aggregates.Customer;
+using DddEf.Domain.Aggregates.Customer.ValueObjects;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 

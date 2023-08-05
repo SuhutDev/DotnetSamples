@@ -1,8 +1,8 @@
-﻿using DddEf.Domain.Common.Models;
-using DddEf.Domain.Product.ValueObjects;
-using DddEf.Domain.SalesOrder.ValueObjects;
+﻿using DddEf.Domain.Aggregates.Product.ValueObjects;
+using DddEf.Domain.Aggregates.SalesOrder.ValueObjects;
+using DddEf.Domain.Common.Models;
 
-namespace DddEf.Domain.SalesOrder.Entities;
+namespace DddEf.Domain.Aggregates.SalesOrder.Entities;
 
 public sealed class SalesOrderItem : EntityDet1<SalesOrderItemDet1Id>
 {
@@ -11,7 +11,7 @@ public sealed class SalesOrderItem : EntityDet1<SalesOrderItemDet1Id>
     {
 
     }
-     
+
 #pragma warning disable CS8618
     public int RowNumber { get; private set; }
     public ProductId ProductId { get; private set; }

@@ -1,23 +1,23 @@
 ﻿using DddEf.Domain.Common.Models;
 
-namespace DddEf.Domain.SalesOrder.ValueObjects;
-public sealed class SalesOrderItemDet1Id : ValueObject
+namespace DddEf.Domain.Aggregates.SalesOrder.ValueObjects;
+public sealed class SalesOrderId : ValueObject
 {
     public Guid Value { get; }
-
 #pragma warning disable CS8618
-    private SalesOrderItemDet1Id()
+    private SalesOrderId()
     {
     }
 #pragma warning disable CS8618
-    private SalesOrderItemDet1Id(Guid value) => Value = value;
 
-    public static SalesOrderItemDet1Id CreateUnique()
+    private SalesOrderId(Guid value) => Value = value;
+
+    public static SalesOrderId CreateUnique()
     {
         return new(Guid.NewGuid());
     }
 
-    public static SalesOrderItemDet1Id Create(Guid value)
+    public static SalesOrderId Create(Guid value)
     {
         return new(value);
     }

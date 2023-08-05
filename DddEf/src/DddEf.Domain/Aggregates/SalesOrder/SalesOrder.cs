@@ -1,17 +1,16 @@
-﻿using DddEf.Domain.Common.Models;
-using DddEf.Domain.Customer.ValueObjects;
-using DddEf.Domain.SalesOrder.Entities;
-using DddEf.Domain.SalesOrder.ValueObjects;
+﻿using DddEf.Domain.Aggregates.Customer.ValueObjects;
+using DddEf.Domain.Aggregates.SalesOrder.Entities;
+using DddEf.Domain.Aggregates.SalesOrder.ValueObjects;
+using DddEf.Domain.Common.Models;
 
-namespace DddEf.Domain.SalesOrder;
+namespace DddEf.Domain.Aggregates.SalesOrder;
 public sealed class SalesOrder : AggregateRoot<SalesOrderId>
 {
 #pragma warning disable CS8618
     private SalesOrder()
     {
 
-    }
-
+    } 
 #pragma warning disable CS8618
     public string TransNo { get; private set; }
     public DateTime TransDate { get; private set; }

@@ -1,5 +1,5 @@
-﻿using DddEf.Domain.Product.Entities;
-using DddEf.Domain.Product.ValueObjects;
+﻿using DddEf.Domain.Aggregates.Product;
+using DddEf.Domain.Aggregates.Product.ValueObjects;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
