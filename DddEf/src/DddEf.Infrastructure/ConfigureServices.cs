@@ -17,6 +17,7 @@ public static class ConfigureServices
         });
 
         services.AddScoped<DddEfContext>(provider => provider.GetRequiredService<DddEfContext>());
+        //services.AddScoped<DddEfContext>();
 
     
         return services;

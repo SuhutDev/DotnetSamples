@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
-using Microsoft.VisualStudio.TestPlatform.TestHost; 
+//using Microsoft.VisualStudio.TestPlatform.TestHost; 
 using System.Data.Common; 
 
 namespace Application.FunctionalTests;
@@ -26,9 +26,7 @@ public class CustomWebApplicationFactory : WebApplicationFactory<Program>
             services
                 .RemoveAll<DbContextOptions<DddEfContext>>()
                 .AddDbContext<DddEfContext>((sp, options) =>
-                {
-                    options.AddInterceptors(sp.GetServices<ISaveChangesInterceptor>());
- 
+                {  
                     options.UseSqlServer(_connection); 
                 });
         });
