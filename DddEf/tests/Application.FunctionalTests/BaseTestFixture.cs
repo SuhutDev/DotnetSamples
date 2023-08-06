@@ -1,6 +1,7 @@
 ﻿namespace Application.FunctionalTests;
 
 using NUnit.Framework;
+
 using static Testing;
 
 [TestFixture]
