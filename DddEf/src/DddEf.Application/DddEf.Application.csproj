@@ -7,9 +7,17 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="UseCases\Customers\Commands\" />
-    <Folder Include="UseCases\Products\Commands\" />
     <Folder Include="UseCases\SalesOrders\Commands\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="FluentValidation" Version="11.6.0" />
+    <PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="11.6.0" />
+    <PackageReference Include="MediatR" Version="12.1.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\DddEf.Infrastructure\DddEf.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>

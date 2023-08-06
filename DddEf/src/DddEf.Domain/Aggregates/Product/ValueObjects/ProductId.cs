@@ -1,5 +1,4 @@
 ﻿using DddEf.Domain.Common.Models;
-using DddEf.Domain.Customer.ValueObjects;
 
 namespace DddEf.Domain.Aggregates.Product.ValueObjects;
 
