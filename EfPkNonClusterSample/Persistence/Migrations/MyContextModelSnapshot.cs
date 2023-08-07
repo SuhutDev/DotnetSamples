@@ -4,19 +4,16 @@ using EfPkNonClusterSample;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
-using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
-namespace EfPkNonClusterSample.PersistenceMigrations
+namespace EfPkNonClusterSample.Persistence.Migrations
 {
     [DbContext(typeof(MyContext))]
-    [Migration("20230124170943_MyMigration")]
-    partial class MyMigration
+    partial class MyContextModelSnapshot : ModelSnapshot
     {
-        /// <inheritdoc />
-        protected override void BuildTargetModel(ModelBuilder modelBuilder)
+        protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

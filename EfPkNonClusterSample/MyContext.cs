@@ -26,7 +26,7 @@ public class MyContext : DbContext
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
         // base.OnConfiguring(optionsBuilder);
-        string connstring = "server=localhost;Database=MyDb;user id=sa;password=Pass@Word1;TrustServerCertificate=True;";
+        string connstring = "server=localhost;Database=MyDb;user id=sa;password=1234;TrustServerCertificate=True;";
         optionsBuilder.UseSqlServer(connstring);
     }
 
