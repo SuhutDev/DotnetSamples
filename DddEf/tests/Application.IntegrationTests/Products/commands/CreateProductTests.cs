@@ -16,7 +16,7 @@ public class CreateProductTests : BaseTestFixture
         var command = new CreateProductCommand
         (
             "Code001",
-            "Code002"
+            "Name001"
         );
 
         var productId = await SendAsync(command);

@@ -1,5 +1,4 @@
-﻿using DddEf.Domain.Aggregates.Customer;
-using DddEf.Domain.Aggregates.Product;
+﻿using DddEf.Domain.Aggregates.Product;
 using DddEf.Infrastructure.Persistence;
 using MediatR;
 
