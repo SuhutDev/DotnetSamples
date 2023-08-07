@@ -48,14 +48,15 @@ public class SalesOrderConfiguration : IEntityTypeConfiguration<SalesOrder>
     {
         builder.OwnsMany(m => m.Items, sb =>
         {
-            sb.ToTable("Tx_SalesOrder_Item");
+            sb.ToTable("Tx_SalesOrder_Item"); 
 
             sb.WithOwner().HasForeignKey(nameof(SalesOrderId));
             sb.Property(nameof(SalesOrderId))
                 .HasColumnName(nameof(SalesOrder.Id));
+             
+            sb.HasIndex(nameof(SalesOrder.Id), nameof(SalesOrderItem.RowNumber)).IsUnique();
 
-            sb.HasKey(nameof(SalesOrder.Id), nameof(SalesOrderItem.RowNumber)); 
-            //sb.HasKey(nameof(SalesOrderItem.Det1Id));
+            sb.HasKey(nameof(SalesOrderItem.Det1Id));
 
             sb.Property(sb => sb.Det1Id)
                 .HasColumnName(nameof(SalesOrderItem.Det1Id)) 
