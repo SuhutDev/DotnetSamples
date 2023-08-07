@@ -48,18 +48,16 @@ public class SalesOrderConfiguration : IEntityTypeConfiguration<SalesOrder>
     {
         builder.OwnsMany(m => m.Items, sb =>
         {
-            sb.ToTable("Tx_SalesOrder_Item"); 
-
-            sb.WithOwner().HasForeignKey(nameof(SalesOrderId));
-            sb.Property(nameof(SalesOrderId))
-                .HasColumnName(nameof(SalesOrder.Id));
+            sb.ToTable("Tx_SalesOrder_Item");
              
-            sb.HasIndex(nameof(SalesOrder.Id), nameof(SalesOrderItem.RowNumber)).IsUnique();
+            sb.WithOwner().HasForeignKey(m => m.Id); 
+             
+            sb.HasIndex(m => new { m.Id, m.RowNumber }).IsUnique();
 
             sb.HasKey(nameof(SalesOrderItem.Det1Id));
 
             sb.Property(sb => sb.Det1Id)
-                .HasColumnName(nameof(SalesOrderItem.Det1Id)) 
+                .HasColumnName(nameof(SalesOrderItem.Det1Id))
                 .ValueGeneratedNever()
                 .HasConversion(
                     det1Id => det1Id.Value,
@@ -72,11 +70,11 @@ public class SalesOrderConfiguration : IEntityTypeConfiguration<SalesOrder>
                    value => ProductId.Create(value)
                    )
                    ;
-             
-        }); 
 
-        builder.Navigation(s => s.Items).Metadata.SetField("_items"); 
-        builder.Navigation(s => s.Items).UsePropertyAccessMode(PropertyAccessMode.Field); 
+        });
+
+        builder.Navigation(s => s.Items).Metadata.SetField("_items");
+        builder.Navigation(s => s.Items).UsePropertyAccessMode(PropertyAccessMode.Field);
 
     }
 

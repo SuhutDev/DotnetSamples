@@ -10,8 +10,9 @@ public sealed class SalesOrderItem : EntityDet1<SalesOrderItemDet1Id>
     private SalesOrderItem()
     {
 
-    }
-
+    } 
+    
+    public SalesOrderId Id { get; }
 #pragma warning disable CS8618
     public int RowNumber { get; private set; }
     public ProductId ProductId { get; private set; }
