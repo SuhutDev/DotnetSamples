@@ -18,7 +18,9 @@ namespace DddEf.Application.UseCases.SalesOrders.Commands
             var salesOrder = SalesOrder.Create(
              request.TransNo,
              request.TransDate,
-             request.customerId,
+             request.CustomerId,
+             request.ShipAddress,
+             request.BillAddress,
              request.Items.ConvertAll(item => SalesOrderItem.Create(
                  rowNumber++,
                  item.ProductId,

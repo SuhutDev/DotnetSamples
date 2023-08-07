@@ -117,7 +117,73 @@ namespace DddEf.Infrastructure.Persistence.Migrations
                                 .HasForeignKey("Id");
                         });
 
+                    b.OwnsOne("DddEf.Domain.Common.ValueObjects.Address", "BillAddress", b1 =>
+                        {
+                            b1.Property<Guid>("DetId")
+                                .ValueGeneratedOnAdd()
+                                .HasColumnType("uniqueidentifier");
+
+                            b1.Property<string>("City")
+                                .IsRequired()
+                                .HasMaxLength(50)
+                                .HasColumnType("nvarchar(50)");
+
+                            b1.Property<string>("Country")
+                                .IsRequired()
+                                .HasMaxLength(50)
+                                .HasColumnType("nvarchar(50)");
+
+                            b1.Property<Guid>("Id")
+                                .HasColumnType("uniqueidentifier");
+
+                            b1.HasKey("DetId");
+
+                            b1.HasIndex("Id")
+                                .IsUnique();
+
+                            b1.ToTable("Tx_SalesOrder__BillAddress", (string)null);
+
+                            b1.WithOwner()
+                                .HasForeignKey("Id");
+                        });
+
+                    b.OwnsOne("DddEf.Domain.Common.ValueObjects.Address", "ShipAddress", b1 =>
+                        {
+                            b1.Property<Guid>("DetId")
+                                .ValueGeneratedOnAdd()
+                                .HasColumnType("uniqueidentifier");
+
+                            b1.Property<string>("City")
+                                .IsRequired()
+                                .HasMaxLength(50)
+                                .HasColumnType("nvarchar(50)");
+
+                            b1.Property<string>("Country")
+                                .IsRequired()
+                                .HasMaxLength(50)
+                                .HasColumnType("nvarchar(50)");
+
+                            b1.Property<Guid>("Id")
+                                .HasColumnType("uniqueidentifier");
+
+                            b1.HasKey("DetId");
+
+                            b1.HasIndex("Id")
+                                .IsUnique();
+
+                            b1.ToTable("Tx_SalesOrder__ShipAddress", (string)null);
+
+                            b1.WithOwner()
+                                .HasForeignKey("Id");
+                        });
+
+                    b.Navigation("BillAddress")
+                        .IsRequired();
+
                     b.Navigation("Items");
+
+                    b.Navigation("ShipAddress")
+                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }

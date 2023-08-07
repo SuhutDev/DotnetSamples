@@ -5,6 +5,7 @@ using DddEf.Domain.Aggregates.Customer.ValueObjects;
 using DddEf.Domain.Aggregates.Product.ValueObjects;
 using DddEf.Domain.Aggregates.SalesOrder;
 using DddEf.Domain.Aggregates.SalesOrder.ValueObjects;
+using DddEf.Domain.Common.ValueObjects;
 using FluentAssertions;
 using NUnit.Framework;
 
@@ -13,15 +14,15 @@ namespace DddEf.Application.IntegrationTests.Customers.commands;
 using static Testing;
 
 public class CreateSalesOrderTests : BaseTestFixture
-{ 
+{
     [Test]
     public async Task ShouldCreateCustomer()
-    { 
+    {
         var createCustomerCommand = new CreateCustomerCommand
         (
             "CustomerCode01",
             "CustomerName01"
-        ); 
+        );
         var customerId = await SendAsync(createCustomerCommand);
 
         var createProductCommand1 = new CreateProductCommand
@@ -43,6 +44,8 @@ public class CreateSalesOrderTests : BaseTestFixture
             "Trans001",
             DateTime.Now.Date,
             CustomerId.Create(customerId),
+            new Address("Blora", "Indonesia"),
+            new Address("Jakarta", "Indonesia"),
             new List<SalesOrderItemVm>
             {
                 new SalesOrderItemVm(ProductId.Create(productId1),1,1000),
@@ -55,7 +58,7 @@ public class CreateSalesOrderTests : BaseTestFixture
         var salesOrder = await FindAsync<SalesOrder>(SalesOrderId.Create(salesOrderId));
 
         salesOrder.Should().NotBeNull();
-        salesOrder!.TransNo.Should().Be(createSalesOrderCommand.TransNo); 
+        salesOrder!.TransNo.Should().Be(createSalesOrderCommand.TransNo);
         salesOrder.TransDate.Should().Be(createSalesOrderCommand.TransDate);
         salesOrder.Items.Should().NotBeNull();
         salesOrder.Items.Count.Should().Be(createSalesOrderCommand.Items.Count);

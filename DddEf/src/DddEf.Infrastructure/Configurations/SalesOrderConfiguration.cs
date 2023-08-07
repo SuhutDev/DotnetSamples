@@ -13,9 +13,12 @@ public class SalesOrderConfiguration : IEntityTypeConfiguration<SalesOrder>
     public void Configure(EntityTypeBuilder<SalesOrder> builder)
     {
         ConfigurationSalesOrdersTable(builder);
+        ConfigurationSalesOrdersShipAddressTable(builder);
+        ConfigurationSalesOrdersBillAddressTable(builder);
         ConfigurationSalesOrderItemsTable(builder);
     }
 
+  
     private void ConfigurationSalesOrdersTable(EntityTypeBuilder<SalesOrder> builder)
     {
         builder.ToTable("Tx_SalesOrder");
@@ -41,6 +44,70 @@ public class SalesOrderConfiguration : IEntityTypeConfiguration<SalesOrder>
         builder.Property(m => m.TransNo)
             .HasMaxLength(50);
 
+    }
+
+    private void ConfigurationSalesOrdersShipAddressTable(EntityTypeBuilder<SalesOrder> builder)
+    {
+        builder.OwnsOne(
+            salesOrder => salesOrder.ShipAddress,
+            sb =>
+            {
+                sb
+                    .ToTable("Tx_SalesOrder__ShipAddress");
+
+                sb
+                    .Property(street => street.City)
+                    .HasMaxLength(50)
+                    ;
+
+                sb
+                    .Property(street => street.Country)
+                    .HasMaxLength(50)
+                    ;
+
+                sb
+                    .WithOwner()
+                    .HasForeignKey("Id");
+
+                sb
+                    .Property<Guid>("DetId");
+
+                sb
+                    .HasKey("DetId");   
+               
+            });
+    }
+
+    private void ConfigurationSalesOrdersBillAddressTable(EntityTypeBuilder<SalesOrder> builder)
+    {
+        builder.OwnsOne(
+            salesOrder => salesOrder.BillAddress,
+            sb =>
+            {
+                sb
+                    .ToTable("Tx_SalesOrder__BillAddress");
+
+                sb
+                    .Property(street => street.City)
+                    .HasMaxLength(50)
+                    ;
+
+                sb
+                    .Property(street => street.Country)
+                    .HasMaxLength(50)
+                    ;
+
+                sb
+                    .WithOwner()
+                    .HasForeignKey("Id");
+
+                sb
+                    .Property<Guid>("DetId");
+
+                sb
+                    .HasKey("DetId");
+
+            });
     }
 
 

@@ -8,7 +8,7 @@ namespace DddEf.Application.UseCases.SalesOrders.Commands
         {
             RuleFor(x=>x.TransNo).NotEmpty();
             RuleFor(x=>x.TransDate).NotEmpty(); 
-            RuleFor(x=>x.customerId).NotEmpty(); 
+            RuleFor(x=>x.CustomerId).NotEmpty(); 
             RuleFor(x=>x.Items).NotEmpty(); 
         }
     }
