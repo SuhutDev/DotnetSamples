@@ -1,0 +1,11 @@
+cd src
+
+dotnet ef database drop --project DddEf.Api -f
+
+dotnet ef migrations remove --project DddEf.Infrastructure --startup-project DddEf.Api
+
+dotnet ef migrations add "DddEfMigration" --project DddEf.Infrastructure --startup-project DddEf.Api --output-dir Persistence\Migrations
+
+dotnet ef database update --project DddEf.Infrastructure --startup-project DddEf.Api
+
+cd..
