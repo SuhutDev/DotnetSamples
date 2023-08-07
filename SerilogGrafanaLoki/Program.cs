@@ -2,8 +2,7 @@
 using Serilog;
 using Serilog.Events;
 using Serilog.Formatting.Compact;
-using Serilog.Sinks.Elasticsearch;
-using Serilog.Sinks.Grafana.Loki;
+using Serilog.Sinks.Grafana.Loki; 
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -14,19 +13,14 @@ builder.Host
         config.MinimumLevel.Override("Microsoft", LogEventLevel.Warning)
             .Enrich.FromLogContext()
             .Enrich.WithProperty("Application", context.HostingEnvironment.ApplicationName)
-            .Enrich.WithProperty("Environment", context.HostingEnvironment.EnvironmentName)
-            //.WriteTo.GrafanaLoki("http://localhost:3100")
-            .WriteTo.Elasticsearch(new ElasticsearchSinkOptions(new Uri("http://elastic:elastic@localhost:9200"))
-            {
-                TypeName = null,
-                AutoRegisterTemplate = true,
-                IndexFormat = "WriteToElasticsearchWithSerilog-{0:yyyy-MM-dd}"
-            });
+            .Enrich.WithProperty("Environment", context.HostingEnvironment.EnvironmentName) 
+            .WriteTo.GrafanaLoki("http://localhost:3100")
+            ;
 
         if (context.HostingEnvironment.IsDevelopment())
             config.WriteTo.Console(new RenderedCompactJsonFormatter());
     });
-
+ 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
@@ -37,8 +31,8 @@ if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
-}
-
+} 
+ 
 
 app.MapGet("/cmdSuccess", async () =>
 {
@@ -62,6 +56,7 @@ app.MapGet("/cmdFail", async () =>
     return Results.BadRequest();
 }).WithOpenApi();
 
-
+ 
 app.Run();
 
+ 

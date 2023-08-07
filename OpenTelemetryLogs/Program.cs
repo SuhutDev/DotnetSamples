@@ -56,7 +56,7 @@ app.MapGet("/cmdFail", async (ILogger<Program> logger) =>
     int dice = random.Next(0, 5);
     await Task.Delay(dice * 1000);
 
-    logger.LogInformation($"JANCUK : {dice} ## cmdFail");
+    logger.LogInformation($"DELAY : {dice} ## cmdFail");
 
     return Results.BadRequest();
 }).WithOpenApi();
