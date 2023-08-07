@@ -44,7 +44,8 @@ namespace DddEf.Infrastructure.Persistence.Migrations
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     TransNo = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     TransDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    CustomerId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                    CustomerId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Total = table.Column<double>(type: "float", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -100,7 +101,8 @@ namespace DddEf.Infrastructure.Persistence.Migrations
                     RowNumber = table.Column<int>(type: "int", nullable: false),
                     ProductId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Qty = table.Column<double>(type: "float", nullable: true),
-                    Price = table.Column<double>(type: "float", nullable: true)
+                    Price = table.Column<double>(type: "float", nullable: true),
+                    Total = table.Column<double>(type: "float", nullable: true)
                 },
                 constraints: table =>
                 {

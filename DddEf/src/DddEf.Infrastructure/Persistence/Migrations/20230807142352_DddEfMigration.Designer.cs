@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DddEf.Infrastructure.Persistence.Migrations
 {
     [DbContext(typeof(DddEfContext))]
-    [Migration("20230807141456_DddEfMigration")]
+    [Migration("20230807142352_DddEfMigration")]
     partial class DddEfMigration
     {
         /// <inheritdoc />
@@ -73,6 +73,9 @@ namespace DddEf.Infrastructure.Persistence.Migrations
                     b.Property<Guid>("CustomerId")
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<double>("Total")
+                        .HasColumnType("float");
+
                     b.Property<DateTime>("TransDate")
                         .HasColumnType("datetime2");
 
@@ -108,6 +111,9 @@ namespace DddEf.Infrastructure.Persistence.Migrations
 
                             b1.Property<int>("RowNumber")
                                 .HasColumnType("int");
+
+                            b1.Property<double?>("Total")
+                                .HasColumnType("float");
 
                             b1.HasKey("Det1Id");
 

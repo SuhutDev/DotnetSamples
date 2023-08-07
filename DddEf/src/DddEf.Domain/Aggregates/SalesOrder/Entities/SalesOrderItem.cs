@@ -10,14 +10,15 @@ public sealed class SalesOrderItem : EntityDet1<SalesOrderItemDet1Id>
     private SalesOrderItem()
     {
 
-    } 
-    
+    }
+
     public SalesOrderId Id { get; }
 #pragma warning disable CS8618
     public int RowNumber { get; private set; }
     public ProductId ProductId { get; private set; }
     public double? Qty { get; private set; }
     public double? Price { get; private set; }
+    public double? Total { get; private set; }
     public SalesOrderItem(
                         SalesOrderItemDet1Id detId,
                         int rowNumber,
@@ -31,6 +32,7 @@ public sealed class SalesOrderItem : EntityDet1<SalesOrderItemDet1Id>
         ProductId = productId;
         Qty = qty;
         Price = price;
+        Total = qty * price;
     }
     public static SalesOrderItem Create(
                         int rowNumber,

@@ -11,7 +11,7 @@ public sealed class SalesOrder : AggregateRoot<SalesOrderId>
     private SalesOrder()
     {
 
-    } 
+    }
 #pragma warning disable CS8618
     public string TransNo { get; private set; }
     public DateTime TransDate { get; private set; }
@@ -21,6 +21,7 @@ public sealed class SalesOrder : AggregateRoot<SalesOrderId>
     public IReadOnlyList<SalesOrderItem> Items => _items.AsReadOnly();
 
     private readonly List<SalesOrderItem> _items = new();
+    public double Total { get; private set; }
 
     private SalesOrder(SalesOrderId id, string transNo, DateTime transDate, CustomerId customerId,
         Address billAddress,
@@ -34,6 +35,7 @@ public sealed class SalesOrder : AggregateRoot<SalesOrderId>
         BillAddress = billAddress;
         ShipAddress = shipAddress;
         _items = items;
+        Total = items.Sum(p => p.Total ?? 0);
     }
 
 
