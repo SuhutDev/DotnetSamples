@@ -16,10 +16,10 @@ public static class ConfigureServices
             options.UseSqlServer(connectionString); 
         });
 
-        services.AddScoped<DddEfContext>(provider => provider.GetRequiredService<DddEfContext>());
-        //services.AddScoped<DddEfContext>();
+        //services.AddScoped<DddEfContext>(provider => provider.GetRequiredService<DddEfContext>());
+        services.AddScoped<DddEfContext>();
 
-    
+
         return services;
     }
 }

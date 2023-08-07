@@ -1,28 +1,35 @@
 ﻿using DddEf.Infrastructure.Persistence;
 using MediatR;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using NUnit.Framework;
+using Respawn;
 
-namespace Application.FunctionalTests;
-
+namespace DddEf.Application.IntegrationTests;
 
 [SetUpFixture]
 public partial class Testing
 {
-    private static ITestDatabase _database;
-    private static CustomWebApplicationFactory _factory = null!;
+    private static WebApplicationFactory<Program> _factory = null!;
+    private static IConfiguration _configuration = null!;
     private static IServiceScopeFactory _scopeFactory = null!;
-    private static string? _userId;
+    private static Respawner _checkpoint = null!;
+    private static string? _currentUserId;
 
     [OneTimeSetUp]
-    public async Task RunBeforeAnyTests()
+    public void RunBeforeAnyTests()
     {
-        _database = await TestDatabaseFactory.CreateAsync();
-
-        _factory = new CustomWebApplicationFactory(_database.GetConnection());
-
+        _factory = new CustomWebApplicationFactory();
         _scopeFactory = _factory.Services.GetRequiredService<IServiceScopeFactory>();
+        _configuration = _factory.Services.GetRequiredService<IConfiguration>();
+
+        _checkpoint = Respawner.CreateAsync(_configuration.GetConnectionString("DefaultConnection")!, new RespawnerOptions
+        {
+            TablesToIgnore = new Respawn.Graph.Table[] { "__EFMigrationsHistory" }
+        }).GetAwaiter().GetResult();
     }
 
     public static async Task<TResponse> SendAsync<TResponse>(IRequest<TResponse> request)
@@ -41,19 +48,21 @@ public partial class Testing
         var mediator = scope.ServiceProvider.GetRequiredService<ISender>();
 
         await mediator.Send(request);
-    } 
-    
+    }
+
+  
+ 
     public static async Task ResetState()
     {
         try
         {
-            await _database.ResetAsync();
+            await _checkpoint.ResetAsync(_configuration.GetConnectionString("DefaultConnection")!);
         }
-        catch (Exception)
+        catch (Exception) 
         {
         }
 
-        _userId = null;
+        _currentUserId = null;
     }
 
     public static async Task<TEntity?> FindAsync<TEntity>(params object[] keyValues)
@@ -88,9 +97,7 @@ public partial class Testing
     }
 
     [OneTimeTearDown]
-    public async Task RunAfterAnyTests()
+    public void RunAfterAnyTests()
     {
-        await _database.DisposeAsync();
-        await _factory.DisposeAsync();
     }
 }

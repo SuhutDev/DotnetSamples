@@ -1,6 +1,6 @@
-﻿namespace Application.FunctionalTests;
+﻿using NUnit.Framework;
 
-using NUnit.Framework;
+namespace DddEf.Application.IntegrationTests;
 
 using static Testing;
 
