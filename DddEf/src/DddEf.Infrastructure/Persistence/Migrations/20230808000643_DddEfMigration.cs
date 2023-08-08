@@ -42,9 +42,11 @@ namespace DddEf.Infrastructure.Persistence.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    TransNo = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    TransNo = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     TransDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     CustomerId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    ShipAddress_City = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    ShipAddress_Country = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     Total = table.Column<double>(type: "float", nullable: false)
                 },
                 constraints: table =>
@@ -66,26 +68,6 @@ namespace DddEf.Infrastructure.Persistence.Migrations
                     table.PrimaryKey("PK_Tx_SalesOrder__BillAddress", x => x.DetId);
                     table.ForeignKey(
                         name: "FK_Tx_SalesOrder__BillAddress_Tx_SalesOrder_Id",
-                        column: x => x.Id,
-                        principalTable: "Tx_SalesOrder",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Tx_SalesOrder__ShipAddress",
-                columns: table => new
-                {
-                    DetId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    City = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    Country = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Tx_SalesOrder__ShipAddress", x => x.DetId);
-                    table.ForeignKey(
-                        name: "FK_Tx_SalesOrder__ShipAddress_Tx_SalesOrder_Id",
                         column: x => x.Id,
                         principalTable: "Tx_SalesOrder",
                         principalColumn: "Id",
@@ -122,12 +104,6 @@ namespace DddEf.Infrastructure.Persistence.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_Tx_SalesOrder__ShipAddress_Id",
-                table: "Tx_SalesOrder__ShipAddress",
-                column: "Id",
-                unique: true);
-
-            migrationBuilder.CreateIndex(
                 name: "IX_Tx_SalesOrder_Item_Id_RowNumber",
                 table: "Tx_SalesOrder_Item",
                 columns: new[] { "Id", "RowNumber" },
@@ -145,9 +121,6 @@ namespace DddEf.Infrastructure.Persistence.Migrations
 
             migrationBuilder.DropTable(
                 name: "Tx_SalesOrder__BillAddress");
-
-            migrationBuilder.DropTable(
-                name: "Tx_SalesOrder__ShipAddress");
 
             migrationBuilder.DropTable(
                 name: "Tx_SalesOrder_Item");

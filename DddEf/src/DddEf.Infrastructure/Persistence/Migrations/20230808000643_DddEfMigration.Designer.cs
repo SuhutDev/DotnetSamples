@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DddEf.Infrastructure.Persistence.Migrations
 {
     [DbContext(typeof(DddEfContext))]
-    [Migration("20230807142352_DddEfMigration")]
+    [Migration("20230808000643_DddEfMigration")]
     partial class DddEfMigration
     {
         /// <inheritdoc />
@@ -81,8 +81,7 @@ namespace DddEf.Infrastructure.Persistence.Migrations
 
                     b.Property<string>("TransNo")
                         .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
@@ -158,8 +157,7 @@ namespace DddEf.Infrastructure.Persistence.Migrations
 
                     b.OwnsOne("DddEf.Domain.Common.ValueObjects.Address", "ShipAddress", b1 =>
                         {
-                            b1.Property<Guid>("DetId")
-                                .ValueGeneratedOnAdd()
+                            b1.Property<Guid>("SalesOrderId")
                                 .HasColumnType("uniqueidentifier");
 
                             b1.Property<string>("City")
@@ -172,18 +170,12 @@ namespace DddEf.Infrastructure.Persistence.Migrations
                                 .HasMaxLength(50)
                                 .HasColumnType("nvarchar(50)");
 
-                            b1.Property<Guid>("Id")
-                                .HasColumnType("uniqueidentifier");
+                            b1.HasKey("SalesOrderId");
 
-                            b1.HasKey("DetId");
-
-                            b1.HasIndex("Id")
-                                .IsUnique();
-
-                            b1.ToTable("Tx_SalesOrder__ShipAddress", (string)null);
+                            b1.ToTable("Tx_SalesOrder");
 
                             b1.WithOwner()
-                                .HasForeignKey("Id");
+                                .HasForeignKey("SalesOrderId");
                         });
 
                     b.Navigation("BillAddress")
